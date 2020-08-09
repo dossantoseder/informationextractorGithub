@@ -20,9 +20,9 @@ public class GenerateXLS {
         return workbook;
     }
 
-	public HSSFSheet openXLS(Map<Integer, String> rowheadValue) {
+	public HSSFSheet openXLS(Map<Integer, String> rowheadValue, String repositories) {
 		try {
-			sheet = workbook.createSheet("Repositories");
+			sheet = workbook.createSheet(repositories);
 			rowhead = sheet.createRow((short) 0);
 
 			for (Map.Entry m : rowheadValue.entrySet()) {

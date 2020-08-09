@@ -82,7 +82,9 @@ public class App {
 		String repository = mapaNomes.get(kOwner.get(nextKey));
 		
 		ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository(repository);
+		cRepository.events.addObserver("getdevelopers", new ControllerSearchDeveloper());
 		cRepository.start(owner, repository);
+		
 	}
 
 	// Ler arquivos de commits dos colaboradores

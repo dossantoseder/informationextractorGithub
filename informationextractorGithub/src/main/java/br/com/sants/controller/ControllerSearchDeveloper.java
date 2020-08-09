@@ -18,14 +18,21 @@ import br.com.sants.service.ServiceDeveloper;
 import br.com.sants.util.GenerateXLS;
 import br.com.sants.service.RetrofitLauncher;
 
-public class ControllerSearchDeveloper implements Callback<User> {
-	private GenerateXLS generateXLS = new GenerateXLS();
+public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.util.EventListener{
+	private GenerateXLS generateXLS;
 	private HSSFWorkbook workbook;
 	private HSSFSheet sheet = null;
 	private HSSFRow row;
-	String developer = "github-sheriff";
-	private String API_VERSION_SPEC = "application/vnd.github.v3+json";
-	private String accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939"; 
+	String developer;
+	private String API_VERSION_SPEC;
+	private String accessToken;
+	
+	public ControllerSearchDeveloper(){
+		generateXLS = new GenerateXLS();
+		developer = "github-sheriff";
+		API_VERSION_SPEC = "application/vnd.github.v3+json";
+		accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939";
+	}
 
 	public void start() {
         ServiceDeveloper collaboratorService = new RetrofitLauncher().getUserCollaborator();
@@ -37,13 +44,13 @@ public class ControllerSearchDeveloper implements Callback<User> {
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
     	System.out.println("URL: " + response.raw().request().url()+ "\n");
-    	String filename = "/home/pereira/Documentos/dados_git/developer/"+ developer+ "_searchDeveloper.xls";
+    	String filename = "/home/pereira/Documentos/dados_git/tests/"+ developer+ "_searchDeveloper.xls";
 		int iterator = 1;
 		
         if(response.isSuccessful()) {
         	User developer = response.body();
         	//System.out.println(developer.toString());
-        	sheet = generateXLS.openXLS(rowhead());
+        	sheet = generateXLS.openXLS(rowhead(), "Developers");
 			fillLine(developer, iterator);
 			generateXLS.createXLS(filename);
         } else {
@@ -77,5 +84,10 @@ public class ControllerSearchDeveloper implements Callback<User> {
 			row.createCell(3).setCellValue(developer.getCreated_at());
 			row.createCell(4).setCellValue(developer.getUpdated_at());
 	}
+    
+    @Override
+    public void update(String eventType) {
+    	start();
+    }
 
 }

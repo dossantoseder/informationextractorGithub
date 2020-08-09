@@ -23,7 +23,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 	private HSSFSheet sheet = null;
 	private HSSFRow row;
 	public String repository;
-	public EventManager events;
+	public br.com.sants.util.EventManager events;
 	
 	public ControllerListDevelopersRepository(String repository){
 		this.repository = repository;
@@ -57,10 +57,11 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     	
         if(response.isSuccessful()) {
             List<Contributor> listDeveloper = response.body();
-            sheet = generateXLS.openXLS(rowhead());
+            sheet = generateXLS.openXLS(rowhead(), "Repository");
             fillLine(listDeveloper, iterator);
 			generateXLS.createXLS(filename);
             //listDeveloper.forEach(developers -> System.out.println(developers.toString()));
+			events.notifyObservers("getdevelopers");
             
         } else {
             System.out.println("Error" + response.errorBody());

@@ -58,7 +58,7 @@ public class ControllerChangesCommit implements Callback<CommitChanges> {
 
 		if (response.isSuccessful()) {
 			CommitChanges commitChanges = response.body();
-			sheet = generateXLS.openXLS(rowhead());
+			sheet = generateXLS.openXLS(rowhead(), "Commits");
 			fillLine(commitChanges, iterator);
 			generateXLS.createXLS(filename);
 		} else {

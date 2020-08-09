@@ -48,7 +48,7 @@ public class ControllerSearchRepositories implements Callback<Repositories> {
 
 		if (response.isSuccessful()) {
 			Repositories repositories = response.body();
-			sheet = generateXLS.openXLS(rowhead());
+			sheet = generateXLS.openXLS(rowhead(), "Repositoriesinit");
 			fillLine(repositories, iterator);
 			generateXLS.createXLS(filename);
 		} else {
