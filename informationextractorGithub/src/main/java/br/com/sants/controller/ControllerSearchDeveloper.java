@@ -28,7 +28,11 @@ public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.u
 	private String accessToken;
 	
 	public ControllerSearchDeveloper(){
-		generateXLS = new GenerateXLS();
+		//generateXLS = new GenerateXLS();
+		
+		workbook = new HSSFWorkbook();
+		generateXLS = new GenerateXLS(workbook);
+		
 		developer = "github-sheriff";
 		API_VERSION_SPEC = "application/vnd.github.v3+json";
 		accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939";
@@ -44,7 +48,7 @@ public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.u
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
     	System.out.println("URL: " + response.raw().request().url()+ "\n");
-    	String filename = "/home/pereira/Documentos/dados_git/tests/"+ developer+ "_searchDeveloper.xls";
+    	String filename = "/home/pereira/Documentos/dados_git/tests/developer/"+ developer+ "_searchDeveloper.xls";
 		int iterator = 1;
 		
         if(response.isSuccessful()) {

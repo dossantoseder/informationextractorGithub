@@ -33,6 +33,8 @@ import br.com.sants.controller.ControllerSearchDeveloper;
  */
 public class App {
 	List<String> kOwner;
+	String fileName ;
+	int countRepository = 0;
 	App (){
 		kOwner = new ArrayList<String>();
 	}
@@ -41,8 +43,6 @@ public class App {
 		// ControllerSearchRepositories controllerRepository = new
 		// ControllerSearchRepositories();
 		// controllerRepository.start();
-
-		String fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
 
 		// Início do processamento
 		/*
@@ -71,22 +71,30 @@ public class App {
 		 * mapaNomes.get(key)); }
 		 */
 
-		new App().returnDevelopersRepository(0, fileName);
+		new App().returnDevelopersRepository(0);
 
 	}
 
-	public void returnDevelopersRepository(int nextKey, String file) {
-		Map<String, String> mapaNomes = readFileRepository(file);
+	public void returnDevelopersRepository(int nextKey) {
+		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
+		
+		Map<String, String> mapaNomes = readFileRepository(fileName);
 		
 		String owner = kOwner.get(nextKey);
 		String repository = mapaNomes.get(kOwner.get(nextKey));
 		
 		ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository(repository);
 		cRepository.events.addObserver("getdevelopers", new ControllerSearchDeveloper());
-		cRepository.start(owner, repository);
+		cRepository.start(owner, repository, mapaNomes);
 		
 	}
+	public void returnDeveloper() {
+		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
 
+		ControllerSearchDeveloper controller = new ControllerSearchDeveloper(); 
+		controller.start();
+	 
+	}
 	// Ler arquivos de commits dos colaboradores
 	public Map<String, String> readFileCommit(String fileName) {
 		Map<String, String> mapaCommits = new HashMap<String, String>();
