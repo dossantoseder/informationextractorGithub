@@ -22,6 +22,7 @@ import br.com.sants.controller.ControllerListDevelopersRepository;
 import br.com.sants.controller.ControllerListRepositoriesDeveloper;
 import br.com.sants.controller.ControllerSearchCommitDeveloper;
 import br.com.sants.controller.ControllerSearchRepositories;
+import br.com.sants.data.DAORepositories;
 import br.com.sants.model.Author;
 import br.com.sants.model.Commit;
 import br.com.sants.model.Owner;
@@ -71,21 +72,36 @@ public class App {
 		 * mapaNomes.get(key)); }
 		 */
 
-		new App().returnDevelopersRepository(0);
+		new App().returnDevelopersRepository(1);
+		
 
+	}
+	
+	//Retorna os SHA(chave de identificação) dos commits que um desenvolvedor realizou no repositório
+	public void returnCommitDevelope() {
+		ControllerSearchCommitDeveloper controllerSearchCommit = new ControllerSearchCommitDeveloper("fiqryq", "Pantaucovid", "amirisback");
+		controllerSearchCommit.start();
 	}
 
 	public void returnDevelopersRepository(int nextKey) {
 		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
 		
-		Map<String, String> mapaNomes = readFileRepository(fileName);
+		DAORepositories DAORepositories = new DAORepositories(); 
 		
-		String owner = kOwner.get(nextKey);
-		String repository = mapaNomes.get(kOwner.get(nextKey));
+		//Map<String, String> mapaNomes = readFileRepository(fileName);
+		Map<String, String> mapaNomes = DAORepositories.readFileRepository(fileName);
+		System.out.println("QTD Map: "+mapaNomes.size());
+		System.out.println("QTD List: "+kOwner.size());
+		String owner = null;
+		String repository = null;
+		/*if(! kOwner.equals(null)) {
+			owner = kOwner.get(nextKey);
+			repository = mapaNomes.get(kOwner.get(nextKey));
+		}*/
 		
-		ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository(repository);
-		cRepository.events.addObserver("getdevelopers", new ControllerSearchDeveloper());
-		cRepository.start(owner, repository, mapaNomes);
+		ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository( "rn-contact-tracing", "MohGovIL");
+		//cRepository.events.addObserver("getdevelopers", new ControllerSearchDeveloper());
+		cRepository.start(mapaNomes);
 		
 	}
 	public void returnDeveloper() {
@@ -96,7 +112,7 @@ public class App {
 	 
 	}
 	// Ler arquivos de commits dos colaboradores
-	public Map<String, String> readFileCommit(String fileName) {
+	public Map<String, String> readFileCommitA(String fileName) {
 		Map<String, String> mapaCommits = new HashMap<String, String>();
 		try {
 			FileInputStream arquivo = new FileInputStream(new File(fileName));

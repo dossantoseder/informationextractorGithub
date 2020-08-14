@@ -45,15 +45,17 @@ public class ControllerSearchRepositories implements Callback<Repositories> {
 		System.out.println("URL: " + response.raw().request().url() + "\n");
 		String filename = "/home/pereira/Documentos/dados_git/searchRepositories.xls";
 		int iterator = 1;
+		Repositories repositories = null;
 
 		if (response.isSuccessful()) {
-			Repositories repositories = response.body();
-			sheet = generateXLS.openXLS(rowhead(), "Repositoriesinit");
-			fillLine(repositories, iterator);
-			generateXLS.createXLS(filename);
+			repositories = response.body();
+			
 		} else {
 			System.out.println("ERROR: " + response.errorBody());
 		}
+		/*sheet = generateXLS.openXLS(rowhead(), "Repositoriesinit");
+		fillLine(repositories, iterator);
+		generateXLS.createXLS(filename);*/
 	}
 
 	@Override

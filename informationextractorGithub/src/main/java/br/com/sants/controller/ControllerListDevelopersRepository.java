@@ -13,6 +13,7 @@ import br.com.sants.service.RetrofitLauncher;
 import br.com.sants.service.ServiceRepository;
 import br.com.sants.util.EventManager;
 import br.com.sants.util.GenerateXLS;
+import br.com.sants.data.DAOListDevelopersRepository;
 import br.com.sants.model.Contributor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,29 +26,31 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 	private HSSFSheet sheet = null;
 	private HSSFRow row;
 	public String repository;
+	private String owner;
 	public br.com.sants.util.EventManager events;
 	private int count = 0;
 	
-	public ControllerListDevelopersRepository(String repository){
+	public ControllerListDevelopersRepository(String repository, String owner){
 		this.repository = repository;
 		this.events = new EventManager("getdevelopers", "getrepository");
 		workbook = new HSSFWorkbook();
 		generateXLS = new GenerateXLS(workbook);
+		this.owner = owner;
 	} 
 	//private String fullName = "MohGovIL"; 
 	//private String repository = "rn-contact-tracing";
 	//private int page = 1;
 	private String API_VERSION_SPEC = "application/vnd.github.v3+json";
 	private String accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939"; 
-	private String repo;
+//	private String repo;
 
-    public void start(String owner, String repository, Map<String, String> mapaNomes) {
+    public void start(Map<String, String> mapaNomes) {
     	//workbook = generateXLS.getInstance();
     	int perPage = 100;
     	
     	//events.addObserver("getdevelopers", new ControllerSearchDeveloper());
     	
-    	Iterator<String> itr2 = mapaNomes.keySet().iterator();
+    /*	Iterator<String> itr2 = mapaNomes.keySet().iterator();
     	while (itr2.hasNext()) {
     		String kOwner = itr2.next();
     		String vRepository = mapaNomes.get(kOwner);
@@ -56,10 +59,10 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     		
     		//System.out.println("CONTADOR: "+this.count);
     		//this.count++;
-    	}
+    	}*/
 			  ServiceRepository  serviceRepository = new RetrofitLauncher().getContributorsRepository();
 			  
-			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, owner, repository, perPage);
+			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, this.owner, this.repository, perPage);
 			  //Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(fullName, repository, page, perPage);
 			  
 			  call.enqueue(this);
@@ -77,12 +80,11 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     	int iterator = 1;
     	System.out.println("TOTAL: "+ response.body().size());
     	int val = response.body().size() - 1;
+    	List<Contributor> listDeveloper = null;
     	
         if(response.isSuccessful()) {
-            List<Contributor> listDeveloper = response.body();
-            sheet = generateXLS.openXLS(rowhead(), this.repository+val);
-            fillLine(listDeveloper, iterator);
-			generateXLS.createXLS(filename);
+            listDeveloper = response.body();
+            
             //listDeveloper.forEach(developers -> System.out.println(developers.toString()));
 			events.notifyObservers("getdevelopers");
             
@@ -94,6 +96,11 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
         	generateXLS.createXLS(filename);
         	events.notifyObservers("getdevelopers");
         }*/
+        DAOListDevelopersRepository DAOListDevelopersRepositor = new DAOListDevelopersRepository(this.repository, this.owner, listDeveloper);
+        DAOListDevelopersRepositor.fillLine();
+        /*sheet = generateXLS.openXLS(rowhead(), this.repository+val);
+        fillLine(listDeveloper, iterator);
+		generateXLS.createXLS(filename);*/
     }
 
     @Override
@@ -109,7 +116,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 			row.createCell(1).setCellValue(developer.getId());
 			row.createCell(2).setCellValue(developer.getLogin());
 			row.createCell(3).setCellValue(developer.getContributions());
-			//row.createCell(4).setCellValue(developer.getRepos_url());
+			row.createCell(4).setCellValue(this.owner);
 
 			iterator++;
 		}
@@ -117,12 +124,12 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     
     public Map<Integer, String> rowhead() {
 		Map<Integer, String> map = new HashMap<Integer, String>();
-
-		map.put(0, "Project");
+		
+		map.put(0, "Repository");
 		map.put(1, "Identifier");
-		map.put(2, "Name");
+		map.put(2, "Developer");
 		map.put(3, "Contributions");
-		//map.put(4, "Repositories URL");
+		map.put(4, "Owner");
 
 		return map;
 	}
