@@ -10,6 +10,8 @@ public class Contributor {
 	private String login;
 	private int contributions;
 	private String repos_url;
+	private String repository;
+	private String owner;
 
 	public long getId() {
 		return id;
@@ -41,6 +43,24 @@ public class Contributor {
 
 	public void setRepos_url(String repos_url) {
 		this.repos_url = repos_url;
+	}
+	
+	
+
+	public String getRepository() {
+		return repository;
+	}
+
+	public void setRepository(String repository) {
+		this.repository = repository;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	@Override

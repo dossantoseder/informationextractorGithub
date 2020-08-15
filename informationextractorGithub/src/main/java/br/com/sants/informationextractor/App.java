@@ -22,9 +22,11 @@ import br.com.sants.controller.ControllerListDevelopersRepository;
 import br.com.sants.controller.ControllerListRepositoriesDeveloper;
 import br.com.sants.controller.ControllerSearchCommitDeveloper;
 import br.com.sants.controller.ControllerSearchRepositories;
+import br.com.sants.data.DAOListDevelopersRepository;
 import br.com.sants.data.DAORepositories;
 import br.com.sants.model.Author;
 import br.com.sants.model.Commit;
+import br.com.sants.model.Contributor;
 import br.com.sants.model.Owner;
 import br.com.sants.model.Repository;
 import br.com.sants.controller.ControllerSearchDeveloper;
@@ -73,7 +75,13 @@ public class App {
 		 */
 
 		//new App().returnDevelopersRepository(1);
-		new App().returnDeveloper();
+		//new App().returnDeveloper();
+		
+		DAOListDevelopersRepository DAOListDevelopersRepository = new DAOListDevelopersRepository();
+		List<Contributor> listDevelopers = DAOListDevelopersRepository.readFileDevelopers("/home/pereira/Documentos/dados_git/repo/listDevelopersRepository.xls");
+		for(Contributor developers : listDevelopers) {
+			System.out.println(developers.getLogin());
+		}
 
 	}
 	
