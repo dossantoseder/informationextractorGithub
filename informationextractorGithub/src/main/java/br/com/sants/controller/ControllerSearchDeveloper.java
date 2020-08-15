@@ -48,18 +48,20 @@ public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.u
     @Override
     public void onResponse(Call<User> call, Response<User> response) {
     	System.out.println("URL: " + response.raw().request().url()+ "\n");
-    	String filename = "/home/pereira/Documentos/dados_git/tests/developer/"+ developer+ "_searchDeveloper.xls";
+    	String filename = "/home/pereira/Documentos/dados_git/developer/"+ developer+ "_searchDeveloper.xls";
 		int iterator = 1;
+		User developer = null;
 		
         if(response.isSuccessful()) {
-        	User developer = response.body();
+        	developer = response.body();
         	//System.out.println(developer.toString());
-        	sheet = generateXLS.openXLS(rowhead(), "Developers");
-			fillLine(developer, iterator);
-			generateXLS.createXLS(filename);
+        	
         } else {
             System.out.println("ERROR: "+ response.errorBody());
         }
+        sheet = generateXLS.openXLS(rowhead(), "Developers");
+		fillLine(developer, iterator);
+		generateXLS.createXLS(filename);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.u
 		Map<Integer, String> map = new HashMap<Integer, String>();
 
 		map.put(0, "Identifier");
-		map.put(1, "Login");
+		map.put(1, "Developer");
 		map.put(2, "Number repository");
 		map.put(3, "Created at");
 		map.put(4, "Updated at");

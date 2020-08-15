@@ -1,18 +1,11 @@
 package br.com.sants.controller;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import br.com.sants.service.RetrofitLauncher;
 import br.com.sants.service.ServiceRepository;
 import br.com.sants.util.EventManager;
-import br.com.sants.util.GenerateXLS;
 import br.com.sants.data.DAOListDevelopersRepository;
 import br.com.sants.model.Contributor;
 import retrofit2.Call;
@@ -20,11 +13,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ControllerListDevelopersRepository implements Callback<List<Contributor>> {
-	//private GenerateXLS generateXLS = new GenerateXLS();
-	private GenerateXLS generateXLS;
-	private HSSFWorkbook workbook;
-	private HSSFSheet sheet = null;
-	private HSSFRow row;
 	public String repository;
 	private String owner;
 	public br.com.sants.util.EventManager events;
@@ -33,8 +21,6 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 	public ControllerListDevelopersRepository(String repository, String owner){
 		this.repository = repository;
 		this.events = new EventManager("getdevelopers", "getrepository");
-		workbook = new HSSFWorkbook();
-		generateXLS = new GenerateXLS(workbook);
 		this.owner = owner;
 	} 
 	//private String fullName = "MohGovIL"; 
@@ -98,9 +84,6 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
         }*/
         DAOListDevelopersRepository DAOListDevelopersRepositor = new DAOListDevelopersRepository(this.repository, this.owner, listDeveloper);
         DAOListDevelopersRepositor.fillLine();
-        /*sheet = generateXLS.openXLS(rowhead(), this.repository+val);
-        fillLine(listDeveloper, iterator);
-		generateXLS.createXLS(filename);*/
     }
 
     @Override
@@ -108,29 +91,5 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
         t.printStackTrace();
     }
     
-    public void fillLine(List<Contributor> listDeveloper, int iterator) {
-		for (Contributor developer : listDeveloper) {
-			row = sheet.createRow((short) iterator);
-			
-			row.createCell(0).setCellValue(this.repository);
-			row.createCell(1).setCellValue(developer.getId());
-			row.createCell(2).setCellValue(developer.getLogin());
-			row.createCell(3).setCellValue(developer.getContributions());
-			row.createCell(4).setCellValue(this.owner);
-
-			iterator++;
-		}
-	}
-    
-    public Map<Integer, String> rowhead() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
-		
-		map.put(0, "Repository");
-		map.put(1, "Identifier");
-		map.put(2, "Developer");
-		map.put(3, "Contributions");
-		map.put(4, "Owner");
-
-		return map;
-	}
+   
 }

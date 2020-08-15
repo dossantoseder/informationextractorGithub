@@ -72,8 +72,8 @@ public class App {
 		 * mapaNomes.get(key)); }
 		 */
 
-		new App().returnDevelopersRepository(1);
-		
+		//new App().returnDevelopersRepository(1);
+		new App().returnDeveloper();
 
 	}
 	
@@ -82,7 +82,7 @@ public class App {
 		ControllerSearchCommitDeveloper controllerSearchCommit = new ControllerSearchCommitDeveloper("fiqryq", "Pantaucovid", "amirisback");
 		controllerSearchCommit.start();
 	}
-
+	//Retorna a lista de desenvolvedores de um repositório
 	public void returnDevelopersRepository(int nextKey) {
 		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
 		
