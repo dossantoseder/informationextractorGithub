@@ -33,7 +33,6 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     public void start(Map<String, String> mapaNomes) {
     	//workbook = generateXLS.getInstance();
     	int perPage = 100;
-    	
     	//events.addObserver("getdevelopers", new ControllerSearchDeveloper());
     	
     /*	Iterator<String> itr2 = mapaNomes.keySet().iterator();
@@ -52,26 +51,18 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 			  //Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(fullName, repository, page, perPage);
 			  
 			  call.enqueue(this);
-			  
 			//  this.count++;
-			  
-		
     }
 
     @Override
     public void onResponse(Call<List<Contributor>> call, Response<List<Contributor>> response) {
     	System.out.println("URL: " + response.raw().request().url()+ "\n");
-    	//String filename = "/home/pereira/Documentos/dados_git/list_developers/"+repository+"_listDevelopersRepository_"+page+".xls";
-    	String filename = "/home/pereira/Documentos/dados_git/tests/"+this.repository+"_listDevelopersRepository.xls";
-    	int iterator = 1;
     	System.out.println("TOTAL: "+ response.body().size());
     	int val = response.body().size() - 1;
     	List<Contributor> listDeveloper = null;
     	
         if(response.isSuccessful()) {
             listDeveloper = response.body();
-            
-            //listDeveloper.forEach(developers -> System.out.println(developers.toString()));
 			events.notifyObservers("getdevelopers");
             
         } else {
