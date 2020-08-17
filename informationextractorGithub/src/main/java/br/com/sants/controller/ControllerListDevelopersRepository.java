@@ -6,7 +6,7 @@ import java.util.Map;
 import br.com.sants.service.RetrofitLauncher;
 import br.com.sants.service.ServiceRepository;
 import br.com.sants.util.EventManager;
-import br.com.sants.data.DAOListDevelopersRepository;
+import br.com.sants.data.DevelopersRepositoryDAO;
 import br.com.sants.model.Contributor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,28 +23,14 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 		this.events = new EventManager("getdevelopers", "getrepository");
 		this.owner = owner;
 	} 
-	//private String fullName = "MohGovIL"; 
-	//private String repository = "rn-contact-tracing";
 	//private int page = 1;
 	private String API_VERSION_SPEC = "application/vnd.github.v3+json";
 	private String accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939"; 
-//	private String repo;
 
-    public void start(Map<String, String> mapaNomes) {
-    	//workbook = generateXLS.getInstance();
+    public void start() {
     	int perPage = 100;
     	//events.addObserver("getdevelopers", new ControllerSearchDeveloper());
-    	
-    /*	Iterator<String> itr2 = mapaNomes.keySet().iterator();
-    	while (itr2.hasNext()) {
-    		String kOwner = itr2.next();
-    		String vRepository = mapaNomes.get(kOwner);
-    		System.out.println(kOwner + " = " + vRepository);
-    		this.repository = vRepository;
-    		
-    		//System.out.println("CONTADOR: "+this.count);
-    		//this.count++;
-    	}*/
+
 			  ServiceRepository  serviceRepository = new RetrofitLauncher().getContributorsRepository();
 			  
 			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, this.owner, this.repository, perPage);
@@ -69,12 +55,9 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
             System.out.println("Error" + response.errorBody());
         }
         System.out.println("CONTADOR FIM: "+ this.count);
-        /*if(count == 2) {
-        	generateXLS.createXLS(filename);
-        	events.notifyObservers("getdevelopers");
-        }*/
-        DAOListDevelopersRepository DAOListDevelopersRepositor = new DAOListDevelopersRepository(this.repository, this.owner, listDeveloper);
-        DAOListDevelopersRepositor.fillLine();
+        
+        DevelopersRepositoryDAO developersRepositoryDAO = new DevelopersRepositoryDAO();
+        developersRepositoryDAO.add(listDeveloper, this.repository, this.owner);
     }
 
     @Override

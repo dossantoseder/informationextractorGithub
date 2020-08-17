@@ -11,7 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import br.com.sants.data.DAODevelopers;
+import br.com.sants.data.DevelopersDAO;
 import br.com.sants.model.Repositories;
 import br.com.sants.model.Repository;
 import br.com.sants.model.User;
@@ -49,8 +49,10 @@ public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.u
         } else {
             System.out.println("ERROR: "+ response.errorBody());
         }
-		DAODevelopers DAODevelopers = new DAODevelopers();
-		DAODevelopers.fillLine(developer);
+        DevelopersDAO developersDAO = new DevelopersDAO();
+        developersDAO.add(developer);
+		/*DAODevelopers DAODevelopers = new DAODevelopers();
+		DAODevelopers.fillLine(developer);*/
     }
 
     @Override

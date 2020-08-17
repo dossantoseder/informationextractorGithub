@@ -2,7 +2,7 @@ package br.com.sants.controller;
 
 import java.util.List;
 
-import br.com.sants.data.DAOCommitKey;
+import br.com.sants.data.CommitKeyDAO;
 import br.com.sants.model.Commit;
 import br.com.sants.service.RetrofitLauncher;
 import br.com.sants.service.ServiceCommit;
@@ -16,12 +16,20 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	private String author;//Deve vim da lista de desenvolvedores do repositório
 	private String owner;
 	private String repo;
-	private DAOCommitKey facadeCommitKey;
+	private static int numConsultations;
 	
+	 public ControllerSearchCommitDeveloper(String owner, String repo, String author, int numConsultations){
+		 this.owner = owner;
+		 this.repo = repo;
+		 this.author = author;
+		 this.numConsultations = numConsultations;
+	 }
+	 
 	 public ControllerSearchCommitDeveloper(String owner, String repo, String author){
 		 this.owner = owner;
 		 this.repo = repo;
 		 this.author = author;
+		 this.numConsultations = 1;
 	 }
 
 	public void start() {
@@ -45,8 +53,10 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	        } else {
 	            System.out.println("Error" + response.errorBody());
 	        }
-	        facadeCommitKey = new DAOCommitKey(listCommitDeveloper, owner, repo);
-	        facadeCommitKey.fillLine();
+	       /* facadeCommitKey = new DAOCommitKey(listCommitDeveloper, owner, repo, numConsultations);
+	        facadeCommitKey.fillLine();*/
+	        CommitKeyDAO commitKeyDAO = new CommitKeyDAO();
+	        commitKeyDAO.add(listCommitDeveloper, repo, owner);
 	    }
 
 	    @Override

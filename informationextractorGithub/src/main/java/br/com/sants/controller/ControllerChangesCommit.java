@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Row;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import br.com.sants.data.ChangesCommitDAO;
 import br.com.sants.model.Author;
 import br.com.sants.model.Commit;
 import br.com.sants.model.CommitChanges;
@@ -55,90 +56,23 @@ public class ControllerChangesCommit implements Callback<CommitChanges> {
 		System.out.println("URL: " + response.raw().request().url() + "\n");
 		String filename = "/home/pereira/Documentos/dados_git/commit/" + ref + "_.xls";
 		int iterator = 1;
-
+		CommitChanges commitChanges = null;
 		if (response.isSuccessful()) {
-			CommitChanges commitChanges = response.body();
-			sheet = generateXLS.openXLS(rowhead(), "Commits");
-			fillLine(commitChanges, iterator);
-			generateXLS.createXLS(filename);
+			commitChanges = response.body();
+			
 		} else {
 			System.out.println("ERROR: " + response.errorBody());
 		}
+		/*sheet = generateXLS.openXLS(rowhead(), "Commits");
+		fillLine(commitChanges, iterator);
+		generateXLS.createXLS(filename);*/
+		ChangesCommitDAO changesCommitDAO = new ChangesCommitDAO();
+		changesCommitDAO.add(commitChanges);
+		
 	}
 
 	@Override
 	public void onFailure(Call<CommitChanges> call, Throwable t) {
 		t.printStackTrace();
 	}
-
-	public Map<Integer, String> rowhead() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
-
-		map.put(0, "Changes");
-		map.put(1, "Status");
-		map.put(2, "Filename");
-		map.put(3, "SHA");
-		map.put(4, "Author");
-
-		return map;
-	}
-
-	public void fillLine(CommitChanges commitChanges, int iterator) {
-		for (Files changes : commitChanges.getFiles()) {
-			row = sheet.createRow((short) iterator);
-			if (changes.getFilename().toLowerCase().contains(language.toLowerCase())) {
-				row.createCell(0).setCellValue(changes.getChanges());
-				row.createCell(1).setCellValue(changes.getStatus());
-				row.createCell(2).setCellValue(changes.getFilename());
-				row.createCell(3).setCellValue(commitChanges.getSha());
-				row.createCell(4).setCellValue(commitChanges.getAuthor().getId());
-			}
-			if (changes.getFilename().toLowerCase().contains(language.toLowerCase()))
-				iterator++;
-		}
-	}
-
-	public Map<String, String> openXLS() throws IOException {
-		try {
-			FileInputStream arquivo = new FileInputStream(new File(fileName));
-			HSSFWorkbook workbook = new HSSFWorkbook(arquivo);
-			HSSFSheet sheetAlunos = workbook.getSheetAt(0);
-
-			Iterator<Row> rowIterator = sheetAlunos.iterator();
-
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Iterator<Cell> cellIterator = row.cellIterator();
-
-				Commit commit = new Commit();
-
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					switch (cell.getColumnIndex()) {
-					case 0:
-						commit.setSha(cell.getStringCellValue());
-						break;
-					case 2:
-						Author author = new Author();
-						author.setLogin(cell.getStringCellValue());
-						commit.setAuthor(author);
-						break;
-					}
-				}
-				if(!commit.getSha().equals("Sha"))
-				mapaNomes.put(commit.getSha(), commit.getAuthor().getLogin());
-			}
-			arquivo.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("Arquivo Excel não encontrado!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return mapaNomes;
-
-	}
-
 }

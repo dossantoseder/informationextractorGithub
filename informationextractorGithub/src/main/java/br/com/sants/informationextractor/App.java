@@ -22,7 +22,6 @@ import br.com.sants.controller.ControllerListDevelopersRepository;
 import br.com.sants.controller.ControllerListRepositoriesDeveloper;
 import br.com.sants.controller.ControllerSearchCommitDeveloper;
 import br.com.sants.controller.ControllerSearchRepositories;
-import br.com.sants.data.DAOListDevelopersRepository;
 import br.com.sants.data.DAORepositories;
 import br.com.sants.model.Author;
 import br.com.sants.model.Commit;
@@ -74,145 +73,52 @@ public class App {
 		 * mapaNomes.get(key)); }
 		 */
 
-		//new App().returnDevelopersRepository(1);
+		new App().returnChangesCommit();
 		//new App().returnDeveloper();
 		
-		DAOListDevelopersRepository DAOListDevelopersRepository = new DAOListDevelopersRepository();
-		List<Contributor> listDevelopers = DAOListDevelopersRepository.readFileDevelopers("/home/pereira/Documentos/dados_git/repo/listDevelopersRepository.xls");
+		/*List<Contributor> listDevelopers = DAOListDevelopersRepository.readFileDevelopers("/home/pereira/Documentos/dados_git/repo/listDevelopersRepository.xls");
 		for(Contributor developers : listDevelopers) {
 			System.out.println(developers.getLogin());
-		}
-
+		}*/
+		
+		/*HashMap<String, Map<String, String>> developers = DAOListDevelopersRepository.readFileDevelopersRepository("/home/pereira/Documentos/dados_git/repo/listDevelopersRepository_bkp.xls");
+		Map<String, String> repositoryOwner = null;
+		int numConsultations = developers.size();
+		System.out.println(numConsultations);
+		for (String key : developers.keySet()) {
+            //Capturamos o valor a partir da chave
+			repositoryOwner = developers.get(key);
+			for (String keyRepositoryOwner : repositoryOwner.keySet()) {
+				
+					new App().returnCommitDevelope(repositoryOwner.get(keyRepositoryOwner), keyRepositoryOwner, key, numConsultations);
+			}
+		}*/
+		
 	}
 	
 	//Retorna os SHA(chave de identificação) dos commits que um desenvolvedor realizou no repositório
-	public void returnCommitDevelope() {
-		ControllerSearchCommitDeveloper controllerSearchCommit = new ControllerSearchCommitDeveloper("fiqryq", "Pantaucovid", "amirisback");
+	public void returnCommitDevelope(String owner, String repository, String developer, int numConsultations) {
+		ControllerSearchCommitDeveloper controllerSearchCommit = new ControllerSearchCommitDeveloper(owner, repository, developer, numConsultations);
 		controllerSearchCommit.start();
 	}
 	//Retorna a lista de desenvolvedores de um repositório
 	public void returnDevelopersRepository(int nextKey) {
-		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
-		
-		DAORepositories DAORepositories = new DAORepositories(); 
-		
-		//Map<String, String> mapaNomes = readFileRepository(fileName);
-		Map<String, String> mapaNomes = DAORepositories.readFileRepository(fileName);
-		System.out.println("QTD Map: "+mapaNomes.size());
-		System.out.println("QTD List: "+kOwner.size());
-		String owner = null;
-		String repository = null;
-		/*if(! kOwner.equals(null)) {
-			owner = kOwner.get(nextKey);
-			repository = mapaNomes.get(kOwner.get(nextKey));
-		}*/
-		
 		ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository( "rn-contact-tracing", "MohGovIL");
 		//cRepository.events.addObserver("getdevelopers", new ControllerSearchDeveloper());
-		cRepository.start(mapaNomes);
+		cRepository.start();
 		
 	}
+	//Retorna os dados dos desenvolvedores
 	public void returnDeveloper() {
 		fileName = "/home/pereira/Documentos/dados_git/repositories.xls";
-
 		ControllerSearchDeveloper controller = new ControllerSearchDeveloper(); 
 		controller.start();
-	 
 	}
-	// Ler arquivos de commits dos colaboradores
-	public Map<String, String> readFileCommitA(String fileName) {
-		Map<String, String> mapaCommits = new HashMap<String, String>();
-		try {
-			FileInputStream arquivo = new FileInputStream(new File(fileName));
-			HSSFWorkbook workbook = new HSSFWorkbook(arquivo);
-			HSSFSheet sheetCommits = workbook.getSheetAt(0);
-
-			Iterator<Row> rowIterator = sheetCommits.iterator();
-
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Iterator<Cell> cellIterator = row.cellIterator();
-
-				Commit commit = new Commit();
-
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					switch (cell.getColumnIndex()) {
-					case 0:
-						commit.setSha(cell.getStringCellValue());
-						break;
-					case 2:
-						Author author = new Author();
-						author.setLogin(cell.getStringCellValue());
-						commit.setAuthor(author);
-						break;
-					}
-				}
-				if (!commit.getSha().equals("Sha"))
-					mapaCommits.put(commit.getSha(), commit.getAuthor().getLogin());
-			}
-			arquivo.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("Arquivo Excel não encontrado!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return mapaCommits;
-
+	
+	//Retorna os dados dos desenvolvedores
+	public void returnChangesCommit() {
+		ControllerChangesCommit controller = new ControllerChangesCommit(); 
+		controller.start();
 	}
-
-	// Ler arquivos com os projetos dos softwares
-	public Map<String, String> readFileRepository(String fileName) {
-		Map<String, String> mapaRepository = new HashMap<String, String>();
-		try {
-			FileInputStream arquivo = new FileInputStream(new File(fileName));
-			HSSFWorkbook workbook = new HSSFWorkbook(arquivo);
-			HSSFSheet sheetCommits = workbook.getSheetAt(0);
-
-			Iterator<Row> rowIterator = sheetCommits.iterator();
-
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Iterator<Cell> cellIterator = row.cellIterator();
-
-				Repository repository = new Repository();
-
-				while (cellIterator.hasNext()) {
-					Cell cell = cellIterator.next();
-					switch (cell.getColumnIndex()) {
-					case 1:
-						repository.setName(cell.getStringCellValue());
-						// System.out.println(cell.getCellType());
-						// Chamar método para escrever xls com nova tabela de dados de um contribuitor
-
-						break;
-					case 2:
-						Owner owner = new Owner();
-						owner.setLogin(cell.getStringCellValue());
-						repository.setOwner(owner);
-						break;
-					}
-				}
-				if ((!repository.getName().equals("Name")) && (!repository.getName().equals(""))) {
-					mapaRepository.put(repository.getOwner().getLogin(), repository.getName());
-					kOwner.add(repository.getOwner().getLogin());
-				}
-			}
-			arquivo.close();
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("Arquivo Excel não encontrado!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return mapaRepository;
-
-	}
+	
 }
