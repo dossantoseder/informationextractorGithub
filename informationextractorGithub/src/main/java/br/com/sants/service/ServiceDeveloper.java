@@ -18,9 +18,9 @@ public interface ServiceDeveloper {
 	Call<User> getUser(@Header("Authorization") String accessToken, @Header("Accept") String apiVersionSpec, @Path("user") String username);
 
 	@GET("users/{user}/repos")//https://api.github.com/users/MisterBooo/repos
-	Call<List<Repository>> listRepositoriesDeveloper(@Path("user") String user, @Query("page") int page, @Query("per_page") int per_page);
+	Call<List<Repository>> listRepositoriesDeveloper(@Header("Authorization") String accessToken, @Header("Accept") String apiVersionSpec, @Path("user") String user, @Query("page") int page, @Query("per_page") int per_page);
 	
 	@GET("users/{user}/repos")//https://api.github.com/users/MisterBooo/repos
-	Call<List<Repository>> listRepositoriesDeveloper(@Path("user") String user, @Query("per_page") int per_page);
+	Call<List<Repository>> listRepositoriesDeveloper(@Header("Authorization") String accessToken, @Header("Accept") String apiVersionSpec, @Path("user") String user, @Query("per_page") int per_page);
 
 }

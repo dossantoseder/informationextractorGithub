@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.com.sants.data.CommitKeyDAO;
 import br.com.sants.model.Commit;
+import br.com.sants.model.Contributor;
 import br.com.sants.service.RetrofitLauncher;
 import br.com.sants.service.ServiceCommit;
 import retrofit2.Call;
@@ -16,27 +17,16 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	private String author;//Deve vim da lista de desenvolvedores do repositório
 	private String owner;
 	private String repo;
-	private static int numConsultations;
-	
-	 public ControllerSearchCommitDeveloper(String owner, String repo, String author, int numConsultations){
-		 this.owner = owner;
-		 this.repo = repo;
-		 this.author = author;
-		 this.numConsultations = numConsultations;
-	 }
-	 
-	 public ControllerSearchCommitDeveloper(String owner, String repo, String author){
-		 this.owner = owner;
-		 this.repo = repo;
-		 this.author = author;
-		 this.numConsultations = 1;
+	private Contributor developer;
+	 public ControllerSearchCommitDeveloper(Contributor d){
+		 this.developer = d;
 	 }
 
 	public void start() {
 		int perPage = 100;
 
 		ServiceCommit serviceCommit = new RetrofitLauncher().getServiceCommit();
-		Call<List<Commit>> call = serviceCommit.listCommitAuthor(ACCESSTOKEN, API_VERSION_SPEC, this.owner, this.repo, this.author,
+		Call<List<Commit>> call = serviceCommit.listCommitAuthor(ACCESSTOKEN, API_VERSION_SPEC, this.developer.getOwner(), this.developer.getRepository(), this.developer.getLogin(),
 				perPage);
 		call.enqueue(this);
 
@@ -46,7 +36,7 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	    public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
 	    	System.out.println("URL: " + response.raw().request().url()+ "\n");
 	    	List<Commit> listCommitDeveloper = null;
-	    	System.out.println("TOTAL: "+ response.body().size());
+	    	//System.out.println("TOTAL: "+ response.body().size());
 	        if(response.isSuccessful()) {
 	           listCommitDeveloper = response.body();
 	            //listRepositoriesDeveloper.forEach(listRepositories -> System.out.println(listRepositories.toString()));
@@ -56,7 +46,7 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	       /* facadeCommitKey = new DAOCommitKey(listCommitDeveloper, owner, repo, numConsultations);
 	        facadeCommitKey.fillLine();*/
 	        CommitKeyDAO commitKeyDAO = new CommitKeyDAO();
-	        commitKeyDAO.add(listCommitDeveloper, repo, owner);
+	        commitKeyDAO.add(listCommitDeveloper, this.developer.getRepository(), this.developer.getOwner());
 	    }
 
 	    @Override

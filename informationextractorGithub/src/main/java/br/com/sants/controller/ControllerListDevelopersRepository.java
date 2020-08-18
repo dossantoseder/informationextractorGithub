@@ -8,20 +8,21 @@ import br.com.sants.service.ServiceRepository;
 import br.com.sants.util.EventManager;
 import br.com.sants.data.DevelopersRepositoryDAO;
 import br.com.sants.model.Contributor;
+import br.com.sants.model.Repository;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ControllerListDevelopersRepository implements Callback<List<Contributor>> {
-	public String repository;
-	private String owner;
+	//public String repository;
+	//private String owner;
 	public br.com.sants.util.EventManager events;
 	private int count = 0;
+	private Repository repo;
 	
-	public ControllerListDevelopersRepository(String repository, String owner){
-		this.repository = repository;
+	public ControllerListDevelopersRepository(Repository repo){
 		this.events = new EventManager("getdevelopers", "getrepository");
-		this.owner = owner;
+		this.repo = repo;
 	} 
 	//private int page = 1;
 	private String API_VERSION_SPEC = "application/vnd.github.v3+json";
@@ -30,12 +31,9 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     public void start() {
     	int perPage = 100;
     	//events.addObserver("getdevelopers", new ControllerSearchDeveloper());
-
 			  ServiceRepository  serviceRepository = new RetrofitLauncher().getContributorsRepository();
-			  
-			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, this.owner, this.repository, perPage);
+			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, repo.getOwner().getLogin(), repo.getName(), perPage);
 			  //Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(fullName, repository, page, perPage);
-			  
 			  call.enqueue(this);
 			//  this.count++;
     }
@@ -57,7 +55,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
         System.out.println("CONTADOR FIM: "+ this.count);
         
         DevelopersRepositoryDAO developersRepositoryDAO = new DevelopersRepositoryDAO();
-        developersRepositoryDAO.add(listDeveloper, this.repository, this.owner);
+        developersRepositoryDAO.add(listDeveloper, repo.getName(), repo.getOwner().getLogin());
     }
 
     @Override

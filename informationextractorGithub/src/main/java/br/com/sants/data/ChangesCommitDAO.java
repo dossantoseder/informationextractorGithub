@@ -17,8 +17,9 @@ public class ChangesCommitDAO {
 		this.con = ConnectionSingleton.getInstance().getConnection();
 	}
 
-	public void add(CommitChanges commitChanges) {
-		String sql = "INSERT INTO public.changescommit(iddeveloper, changes, status, filename, sha) VALUES (?, ?, ?, ?, ?)";
+	public void add(CommitChanges commitChanges, String commit) {
+		//public void add(CommitChanges commitChanges, Commit commit) {
+		String sql = "INSERT INTO public.changescommit(iddeveloper, changes, status, filename, sha, project) VALUES (?, ?, ?, ?, ?, ?)";
 		String language = ".java";
 		try {
 			for (Files changes : commitChanges.getFiles()) {
@@ -30,6 +31,7 @@ public class ChangesCommitDAO {
 					stmt.setString(3, changes.getStatus());
 					stmt.setString(4, changes.getFilename());
 					stmt.setString(5, commitChanges.getSha());
+					stmt.setString(6, commit);
 
 					stmt.execute();
 					stmt.close();

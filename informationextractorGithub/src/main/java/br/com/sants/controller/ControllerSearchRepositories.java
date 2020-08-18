@@ -43,7 +43,6 @@ public class ControllerSearchRepositories implements Callback<Repositories> {
 	@Override
 	public void onResponse(Call<Repositories> call, Response<Repositories> response) {
 		System.out.println("URL: " + response.raw().request().url() + "\n");
-		String filename = "/home/pereira/Documentos/dados_git/searchRepositories.xls";
 		int iterator = 1;
 		Repositories repositories = null;
 
@@ -53,50 +52,10 @@ public class ControllerSearchRepositories implements Callback<Repositories> {
 		} else {
 			System.out.println("ERROR: " + response.errorBody());
 		}
-		/*sheet = generateXLS.openXLS(rowhead(), "Repositoriesinit");
-		fillLine(repositories, iterator);
-		generateXLS.createXLS(filename);*/
 	}
 
 	@Override
 	public void onFailure(Call<Repositories> call, Throwable t) {
 		t.printStackTrace();
-	}
-
-	public Map<Integer, String> rowhead() {
-		Map<Integer, String> map = new HashMap<Integer, String>();
-
-		map.put(0, "Identifier");
-		map.put(1, "Name");
-		map.put(2, "Created at");
-		map.put(3, "Language");
-		map.put(4, "Stargazers count");
-		map.put(5, "Owner");
-		map.put(6, "Commits_url");
-		map.put(7, "Downloads URL");
-		map.put(8, "HTML UR");
-		map.put(9, "Contributors URL");
-
-		return map;
-	}
-
-	public void fillLine(Repositories repositories, int iterator) {
-		for (Repository repository : repositories.getItems()) {
-			// System.out.print(repository.toString());
-			row = sheet.createRow((short) iterator);
-
-			row.createCell(0).setCellValue(repository.getId());
-			row.createCell(1).setCellValue(repository.getName());
-			row.createCell(2).setCellValue(repository.getCreated_at());
-			row.createCell(3).setCellValue(repository.getLanguage());
-			row.createCell(4).setCellValue(repository.getStargazers_count());
-			row.createCell(5).setCellValue(repository.getOwner().getLogin());
-			row.createCell(6).setCellValue(repository.getCommits_url());
-			row.createCell(7).setCellValue(repository.getDownloads_url());
-			row.createCell(8).setCellValue(repository.getHtml_url());
-			row.createCell(9).setCellValue(repository.getContributors_url());
-
-			iterator++;
-		}
 	}
 }

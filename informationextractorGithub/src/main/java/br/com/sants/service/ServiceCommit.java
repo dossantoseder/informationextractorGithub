@@ -25,5 +25,10 @@ public interface ServiceCommit {
 	Call<CommitChanges> referenceCommit(@Header("Authorization") String accessToken,
 			@Header("Accept") String apiVersionSpec, @Path("owner") String owner, @Path("repo") String repo,
 			@Path("ref") String ref, @Query("per_page") int per_page); 
+	
+	@GET("repos/{owner}/{repo}/commits/{ref}")
+	Call<List<CommitChanges>> referenceCommits(@Header("Authorization") String accessToken,
+			@Header("Accept") String apiVersionSpec, @Path("owner") String owner, @Path("repo") String repo,
+			@Path("ref") String ref, @Query("per_page") int per_page);
 
 }
