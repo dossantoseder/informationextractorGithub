@@ -10,8 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Map.Entry;
 
+import br.com.sants.controller.ControllerCommitDeveloper;
+import br.com.sants.controller.ControllerDevelopersRepository;
+import br.com.sants.controller.ControllerDeveloper;
 import br.com.sants.controller.ControllerChangesCommit;
 import br.com.sants.controller.ControllerListDevelopersRepository;
 import br.com.sants.controller.ControllerListRepositoriesDeveloper;
@@ -32,30 +37,86 @@ import br.com.sants.controller.ControllerSearchDeveloper;
  * Éder Pereira 05 de junho de 2020
  */
 public class App {
-
+	static int index = 0;
+	static List<Commit> commits;
 	public static void main(String[] args) {
-				new App().returnChangesCommit();
+		commits = getCommitSHA();
+		//new App().ControllerCommitDeveloper();
+		
+		final long time = 2400; 
+		Timer timer = new Timer();
+		TimerTask tarefa = new TimerTask() {
+			public void run() {
+				if(index < commits.size()) {
+					new App().returnChangesCommitTime();
+				}else {
+					System.out.println("Execução finalizada!");
+					System.exit(0);
+				}
+				try {
+					System.out.println("Executando!");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		};
+		timer.scheduleAtFixedRate(tarefa, time, time);
+		
+		//new App().returnChangesCommit();
 
 	}
+	
+	// Retorna as modificações no arquivos comitados dos desenvolvedores
+		public void returnChangesCommitTime() {
+			Commit c =  commits.get(index);
+			if( index <= commits.size())
+				index ++;
+			ControllerChangesCommit controller = new ControllerChangesCommit(c);
+			controller.start();
+		}
 
-	// Retorna a lista de desenvolvedores de um repositório
-	public void returnDevelopersRepository() {
+	// Novo método para retorna a lista de desenvolvedores de um repositório
+	public void ControllerDevelopersRepository() {
 		for (Repository r : getRepositories()) {
-			ControllerListDevelopersRepository cRepository = new ControllerListDevelopersRepository(r);
-			// cRepository.events.addObserver("getdevelopers", new
-			// ControllerSearchDeveloper());
+			ControllerDevelopersRepository cRepository = new ControllerDevelopersRepository(r);
 			cRepository.start();
 		}
 
 	}
 
 	// Retorna os dados dos desenvolvedores
-	public void returnDeveloper() {
+	public void ControllerDeveloper() {
 		for (Contributor d : getDevelopers()) {
-			ControllerSearchDeveloper controller = new ControllerSearchDeveloper(d);
+			ControllerDeveloper controller = new ControllerDeveloper(d);
 			controller.start();
 		}
 	}
+
+	// Novo método retorna os SHA(chave de identificação) dos commits que um desenvolvedor
+		// realizou no repositório
+		public void ControllerCommitDeveloper() {
+			for (Contributor d : getDevelopers()) {
+				ControllerCommitDeveloper cCommitDeveloper = new ControllerCommitDeveloper(d);
+				cCommitDeveloper.start();
+			}
+		}
+	/*
+	 * Retorna a lista de desenvolvedores de um repositório public void
+	 * returnDevelopersRepository() { for (Repository r : getRepositories()) {
+	 * ControllerListDevelopersRepository cRepository = new
+	 * ControllerListDevelopersRepository(r); //
+	 * cRepository.events.addObserver("getdevelopers", new //
+	 * ControllerSearchDeveloper()); cRepository.start(); }
+	 * 
+	 * }
+	 */
+
+	/*
+	 * Retorna os dados dos desenvolvedores public void returnDeveloper() { for
+	 * (Contributor d : getDevelopers()) { ControllerSearchDeveloper controller =
+	 * new ControllerSearchDeveloper(d); controller.start(); } }
+	 */
 
 	// Lista os repositórios de um desenvolvedor
 	public void returnRepositorieDeveloper() {
@@ -95,7 +156,7 @@ public class App {
 	}
 
 	// Lista de commits
-	public List<Commit> getCommitSHA() {
+	public static List<Commit> getCommitSHA() {
 		CommitKeyDAO commitKeyDAO = new CommitKeyDAO();
 		return commitKeyDAO.getLista();
 	}

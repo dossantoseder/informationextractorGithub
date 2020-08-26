@@ -43,7 +43,7 @@ public class CommitKeyDAO {
 	public List<Commit> getLista() {
 		try {
 			List<Commit> commits = new ArrayList<Commit>();
-			PreparedStatement stmt = this.con.prepareStatement("SELECT * FROM commit WHERE idcommit IN(1265, 1266, 1267)");
+			PreparedStatement stmt = this.con.prepareStatement("SELECT * FROM commit");
 			ResultSet rs = stmt.executeQuery();
 			Author developer;
 			while (rs.next()) {

@@ -9,9 +9,9 @@ public class EventManager implements br.com.sants.util.Observable{
     Map<String, List<EventListener>> listeners = new HashMap<>();
 
     public EventManager(String... operations) {
-        for (String operation : operations) {
+        /*for (String operation : operations) {
             this.listeners.put(operation, new ArrayList<>());
-        }
+        }*/
     }
 
 	@Override

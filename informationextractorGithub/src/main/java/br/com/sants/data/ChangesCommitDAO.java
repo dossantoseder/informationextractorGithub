@@ -17,21 +17,25 @@ public class ChangesCommitDAO {
 		this.con = ConnectionSingleton.getInstance().getConnection();
 	}
 
-	public void add(CommitChanges commitChanges, String commit) {
+	public void add(CommitChanges commitChanges, String project) {
 		//public void add(CommitChanges commitChanges, Commit commit) {
-		String sql = "INSERT INTO public.changescommit(iddeveloper, changes, status, filename, sha, project) VALUES (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO public.changescommit(iddeveloper, filename, status, changes, additions, deletions, date, sha, project) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		String language = ".java";
 		try {
 			for (Files changes : commitChanges.getFiles()) {
 
 				PreparedStatement stmt = this.con.prepareStatement(sql);
+				System.out.println(changes.getFilename());
 				if (changes.getFilename().toLowerCase().contains(language.toLowerCase())) {
 					stmt.setLong(1, commitChanges.getAuthor().getId());
-					stmt.setString(2, changes.getChanges());
+					stmt.setString(2, changes.getFilename());
 					stmt.setString(3, changes.getStatus());
-					stmt.setString(4, changes.getFilename());
-					stmt.setString(5, commitChanges.getSha());
-					stmt.setString(6, commit);
+					stmt.setInt(4, changes.getChanges());
+					stmt.setInt(5, changes.getAdditions());
+					stmt.setInt(6, changes.getDeletions());
+					stmt.setString(7, commitChanges.getCommit().getCommitter().getDate());
+					stmt.setString(8, commitChanges.getSha());
+					stmt.setString(9, project);
 
 					stmt.execute();
 					stmt.close();

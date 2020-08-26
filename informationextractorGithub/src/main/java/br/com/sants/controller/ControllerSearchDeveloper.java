@@ -7,17 +7,12 @@ import retrofit2.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 import br.com.sants.data.DevelopersDAO;
 import br.com.sants.model.Contributor;
 import br.com.sants.model.Repositories;
 import br.com.sants.model.Repository;
 import br.com.sants.model.User;
 import br.com.sants.service.ServiceDeveloper;
-import br.com.sants.util.GenerateXLS;
 import br.com.sants.service.RetrofitLauncher;
 
 public class ControllerSearchDeveloper implements Callback<User>, br.com.sants.util.EventListener{

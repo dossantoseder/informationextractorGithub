@@ -20,7 +20,7 @@ public interface ServiceRepository {
 	Call<List<Contributor>> listContributorsRepository(@Header("Authorization") String accessToken, @Header("Accept") String apiVersionSpec, @Path("login") String login, @Path("name") String name, @Query("per_page") int per_page);
 	
 	@GET("repos/{login}/{name}/contributors")//https://api.github.com/repos/Tencent/tinker/contributors
-	Call<List<Contributor>> listContributorsRepository(@Path("login") String login, @Path("name") String name, @Query("page") int page, @Query("per_page") int per_page);
+	Call<List<Contributor>> listContributorsRepository(@Header("Authorization") String accessToken, @Header("Accept") String apiVersionSpec,@Path("login") String login, @Path("name") String name, @Query("page") int page, @Query("per_page") int per_page);
 }
 
 

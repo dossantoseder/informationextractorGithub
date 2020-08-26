@@ -12,11 +12,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
-	private final String API_VERSION_SPEC = "application/vnd.github.v3+json";
-	private final String ACCESSTOKEN = "9ab5ff381ba2c6510a5662b8de793f0b123cb939";
-	private String author;//Deve vim da lista de desenvolvedores do repositório
-	private String owner;
-	private String repo;
 	private Contributor developer;
 	 public ControllerSearchCommitDeveloper(Contributor d){
 		 this.developer = d;
@@ -24,10 +19,11 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 
 	public void start() {
 		int perPage = 100;
+		int page = 1;
 
 		ServiceCommit serviceCommit = new RetrofitLauncher().getServiceCommit();
-		Call<List<Commit>> call = serviceCommit.listCommitAuthor(ACCESSTOKEN, API_VERSION_SPEC, this.developer.getOwner(), this.developer.getRepository(), this.developer.getLogin(),
-				perPage);
+		Call<List<Commit>> call = serviceCommit.listCommitAuthor(this.developer.getOwner(), this.developer.getRepository(), this.developer.getLogin(),
+				page, perPage);
 		call.enqueue(this);
 
 	}
@@ -36,7 +32,7 @@ public class ControllerSearchCommitDeveloper implements Callback<List<Commit>> {
 	    public void onResponse(Call<List<Commit>> call, Response<List<Commit>> response) {
 	    	System.out.println("URL: " + response.raw().request().url()+ "\n");
 	    	List<Commit> listCommitDeveloper = null;
-	    	//System.out.println("TOTAL: "+ response.body().size());
+	    	System.out.println("TOTAL: "+ response.body().size());
 	        if(response.isSuccessful()) {
 	           listCommitDeveloper = response.body();
 	            //listRepositoriesDeveloper.forEach(listRepositories -> System.out.println(listRepositories.toString()));

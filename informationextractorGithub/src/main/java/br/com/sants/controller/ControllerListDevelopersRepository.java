@@ -24,7 +24,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
 		this.events = new EventManager("getdevelopers", "getrepository");
 		this.repo = repo;
 	} 
-	//private int page = 1;
+	private int page = 2;
 	private String API_VERSION_SPEC = "application/vnd.github.v3+json";
 	private String accessToken  = "9ab5ff381ba2c6510a5662b8de793f0b123cb939"; 
 
@@ -33,7 +33,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     	//events.addObserver("getdevelopers", new ControllerSearchDeveloper());
 			  ServiceRepository  serviceRepository = new RetrofitLauncher().getContributorsRepository();
 			  Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, repo.getOwner().getLogin(), repo.getName(), perPage);
-			  //Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(fullName, repository, page, perPage);
+			  //Call<List<Contributor>>  call = serviceRepository.listContributorsRepository(accessToken, API_VERSION_SPEC, repo.getOwner().getLogin(), repo.getName(), page, perPage);
 			  call.enqueue(this);
 			//  this.count++;
     }
@@ -47,7 +47,7 @@ public class ControllerListDevelopersRepository implements Callback<List<Contrib
     	
         if(response.isSuccessful()) {
             listDeveloper = response.body();
-			events.notifyObservers("getdevelopers");
+			//events.notifyObservers("getdevelopers");
             
         } else {
             System.out.println("Error" + response.errorBody());

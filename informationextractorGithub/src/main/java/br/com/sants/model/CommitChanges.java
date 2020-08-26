@@ -5,12 +5,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({ "node_id", "commit", "committer", "message", "tree", "url", "comment_count", "verification",
-		"html_url", "comments_url", "committer", "parents", "stats" })
+@JsonIgnoreProperties({ "node_id", "message", "tree", "url", "comment_count", "verification",
+		"html_url", "comments_url", "committer", "parents", "stats", "name" })
 public class CommitChanges {
 	private String sha;
 	private Author Author;
 	private List<Files> files;
+	private Commit commit;
 
 	public CommitChanges() {
 		files = new ArrayList<Files>();
@@ -38,6 +39,14 @@ public class CommitChanges {
 
 	public void setAuthor(Author author) {
 		Author = author;
+	}
+
+	public Commit getCommit() {
+		return commit;
+	}
+
+	public void setCommit(Commit commit) {
+		this.commit = commit;
 	}
 
 }

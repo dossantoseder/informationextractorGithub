@@ -2,12 +2,14 @@ package br.com.sants.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({ "sha", "additions", "deletions", "blob_url", "raw_url", "contents_url", "patch", "previous_filename" })
+@JsonIgnoreProperties({ "sha", "blob_url", "raw_url", "contents_url", "patch", "previous_filename" })
 public class Files {
 
 	private String filename;
 	private String status;
-	private String changes;
+	private int changes;
+	private int additions;
+	private int deletions;
 
 	public String getFilename() {
 		return filename;
@@ -25,12 +27,29 @@ public class Files {
 		this.status = status;
 	}
 
-	public String getChanges() {
+	public int getChanges() {
 		return changes;
 	}
 
-	public void setChanges(String changes) {
+	public void setChanges(int changes) {
 		this.changes = changes;
 	}
 
+	public int getAdditions() {
+		return additions;
+	}
+
+	public void setAdditions(int additions) {
+		this.additions = additions;
+	}
+
+	public int getDeletions() {
+		return deletions;
+	}
+
+	public void setDeletions(int deletions) {
+		this.deletions = deletions;
+	}
+
+	
 }

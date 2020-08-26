@@ -42,7 +42,9 @@ public class DevelopersRepositoryDAO {
 	public List<Contributor> getDeveloper() {
 		try {
 			List<Contributor> developers = new ArrayList<Contributor>();
-			PreparedStatement stmt = this.con.prepareStatement("SELECT * FROM developersrepo");
+			PreparedStatement stmt = this.con.prepareStatement("SELECT * FROM developersrepo ");//WHERE iddevelopersrepo IN(631)
+			//PreparedStatement stmt = this.con.prepareStatement("SELECT * FROM developersrepo WHERE developersrepo.iddeveloper NOT IN (SELECT iddeveloper FROM developer) AND owner = 'jfree'");
+			//stmt.setString(1, "ant");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 

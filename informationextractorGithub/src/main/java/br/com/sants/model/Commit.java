@@ -2,14 +2,15 @@ package br.com.sants.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({ "node_id", "commit", "committer", "message", "tree", "comment_count", "verification",
-		"html_url", "comments_url", "committer", "parents" })
+@JsonIgnoreProperties({ "node_id", "commit",  "message", "tree", "comment_count", "verification",
+		"html_url", "comments_url", "parents" })
 public class Commit {
 	private String sha;
 	private String url;
 	private Author Author;
 	private String repository;
 	private String owner;
+	private Committer committer;
 
 	public String getSha() {
 		return sha;
@@ -49,6 +50,14 @@ public class Commit {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public Committer getCommitter() {
+		return committer;
+	}
+
+	public void setCommitter(Committer committer) {
+		this.committer = committer;
 	}
 	
 	
